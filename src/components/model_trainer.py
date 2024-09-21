@@ -18,24 +18,9 @@ class ModelTrainer:
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
 
-    def initiate_model_trainer(self, df):
+    def initiate_model_trainer(self, X,y):
         try:
             logging.info("Starting model training process...")
-
-            # Check for NaN or empty string values
-            nan_counts = df.isna().sum()
-            empty_counts = (df == '').sum()
-            
-            if nan_counts.any() or empty_counts.any():
-                logging.info("Data contains NaN or empty string values:")
-                if nan_counts.any():
-                    logging.info(f"NaN values:\n{nan_counts[nan_counts > 0]}")
-                if empty_counts.any():
-                    logging.info(f"Empty string values:\n{empty_counts[empty_counts > 0]}")
-
-            # Split the DataFrame into features and target
-            X = df.drop(columns='HeartDisease')
-            y = df['HeartDisease']
 
             logging.info(f"Features shape: {X.shape}, Target shape: {y.shape}")
 
@@ -53,6 +38,9 @@ class ModelTrainer:
                 'subsample': 0.8
             }
             xgb_model = xgb.XGBClassifier(random_state=42, **best_params)
+            
+            # Fit the model on the resampled data
+            xgb_model.fit(X_resampled, y_resampled)
 
             # Use cross_val_predict to get predictions across all cross-validation folds
             y_pred = cross_val_predict(xgb_model, X_resampled, y_resampled, cv=5, method='predict')

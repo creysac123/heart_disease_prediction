@@ -42,17 +42,20 @@ class DataTransformation:
             df_encoded = df_encoded.apply(pd.to_numeric, errors='coerce')
 
             # Apply preprocessing and scale features
+            
+            X = df_encoded.drop('HeartDisease', axis=1)
+            y = df_encoded['HeartDisease']
             preprocessing_obj = self.get_data_transformer_object()
-            df_encoded_transformed = pd.DataFrame(preprocessing_obj.fit_transform(df_encoded), 
-                                                  columns=df_encoded.columns)
+            X = pd.DataFrame(preprocessing_obj.fit_transform(X), 
+                                                  columns=X.columns)
 
-            logging.info(f"Dataframe shape after transformation: {df_encoded_transformed.shape}")
+            logging.info(f"Dataframe shape after transformation: {X.shape}")
 
             # Save the preprocessor object
             save_object(self.data_transformation_config.preprocessor_obj_file_path, preprocessing_obj)
             logging.info(f"Preprocessor object saved at {self.data_transformation_config.preprocessor_obj_file_path}")
 
-            return df_encoded_transformed, self.data_transformation_config.preprocessor_obj_file_path
+            return X,y, self.data_transformation_config.preprocessor_obj_file_path
 
         except Exception as e:
             logging.error(f"Error during data transformation: {e}")

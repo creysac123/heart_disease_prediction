@@ -1,0 +1,158 @@
+<html>
+<body>
+    <div class="form-container">
+        <h1>Heart Disease Prediction</h1>
+
+        <form action="{{ url_for('predict_datapoint')}}" method="post">
+            <h2>Heart Disease Prediction Form</h2>
+
+            <!-- BMI -->
+            <div class="mb-3">
+                <label class="form-label">BMI</label>
+                <input class="form-control" type="number" name="bmi" placeholder="Enter your BMI" step="0.01" required />
+            </div>
+
+            <!-- Age Category -->
+            <div class="mb-3">
+                <label class="form-label">Age Category</label>
+                <select class="form-control" name="age_category" required>
+                    <option class="placeholder" selected disabled value="">Select your Age Category</option>
+                    <option value="18-24">18-24</option>
+                    <option value="25-29">25-29</option>
+                    <option value="30-34">30-34</option>
+                    <option value="35-39">35-39</option>
+                    <option value="40-44">40-44</option>
+                    <option value="45-49">45-49</option>
+                    <option value="50-54">50-54</option>
+                    <option value="55-59">55-59</option>
+                    <option value="60-64">60-64</option>
+                    <option value="65-69">65-69</option>
+                    <option value="70-74">70-74</option>
+                    <option value="75-79">75-79</option>
+                    <option value="80 or older">80 or older</option>
+                </select>
+            </div>
+
+            <!-- Sleep Time -->
+            <div class="mb-3">
+                <label class="form-label">Sleep Time (hours)</label>
+                <select class="form-control" name="sleep_time" required>
+                    <option class="placeholder" selected disabled value="">Select your average sleep time (1-24 hours)</option>
+                    {% for i in range(1, 25) %}
+                        <option value="{{ i }}">{{ i }} hour(s)</option>
+                    {% endfor %}
+                </select>
+                <small class="form-text text-muted">Please select the average number of hours you sleep per day. The range is from 1 to 24 hours.</small>
+            </div>
+
+            <!-- Physical Health -->
+            <div class="mb-3">
+                <label class="form-label">Physical Health (0-30)</label>
+                <select class="form-control" name="physical_health" required>
+                    <option class="placeholder" selected disabled value="">Number of physically unhealthy days in the past 30 days</option>
+                    {% for i in range(0, 31) %}
+                        <option value="{{ i }}">{{ i }} day(s)</option>
+                    {% endfor %}
+                </select>
+                <small class="form-text text-muted">Select the number of days, ranging from 0 (best) to 30 (worst), where you felt physically unhealthy in the past 30 days.</small>
+            </div>
+
+            <!-- Mental Health -->
+            <div class="mb-3">
+                <label class="form-label">Mental Health (0-30)</label>
+                <select class="form-control" name="mental_health" required>
+                    <option class="placeholder" selected disabled value="">Number of mentally unhealthy days in the past 30 days</option>
+                    {% for i in range(0, 31) %}
+                        <option value="{{ i }}">{{ i }} day(s)</option>
+                    {% endfor %}
+                </select>
+                <small class="form-text text-muted">Select the number of days, ranging from 0 (best) to 30 (worst), where you felt mentally unhealthy in the past 30 days.</small>
+            </div>
+
+            <!-- General Health -->
+            <div class="mb-3">
+                <label class="form-label">General Health</label>
+                <select class="form-control" name="gen_health" required>
+                    <option class="placeholder" selected disabled value="">Select your general health status</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Very good">Very good</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
+                </select>
+            </div>
+
+            <!-- Diabetic -->
+            <div class="mb-3">
+                <label class="form-label">Diabetic</label>
+                <select class="form-control" name="diabetic" required>
+                    <option class="placeholder" selected disabled value="">Are you diabetic?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                    <option value="No, borderline diabetes">No, borderline diabetes</option>
+                    <option value="Yes (during pregnancy)">Yes (during pregnancy)</option>
+                </select>
+            </div>
+
+            <!-- Sex -->
+            <div class="mb-3">
+                <label class="form-label">Sex</label>
+                <select class="form-control" name="sex" required>
+                    <option class="placeholder" selected disabled value="">Select your sex</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <!-- Smoking -->
+            <div class="mb-3">
+                <label class="form-label">Smoking</label>
+                <select class="form-control" name="smoking" required>
+                    <option class="placeholder" selected disabled value="">Do you smoke?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Stroke -->
+            <div class="mb-3">
+                <label class="form-label">Stroke</label>
+                <select class="form-control" name="stroke" required>
+                    <option class="placeholder" selected disabled value="">Have you had a stroke?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Physical Activity -->
+            <div class="mb-3">
+                <label class="form-label">Physical Activity</label>
+                <select class="form-control" name="physical_activity" required>
+                    <option class="placeholder" selected disabled value="">Do you engage in physical activity?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Difficulty Walking -->
+            <div class="mb-3">
+                <label class="form-label">Difficulty Walking</label>
+                <select class="form-control" name="diff_walking" required>
+                    <option class="placeholder" selected disabled value="">Do you have difficulty walking?</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-3">
+                <input class="btn btn-primary" type="submit" value="Predict Heart Disease" />
+            </div>
+        </form>
+
+        <h2>
+           The predicted heart disease outcome is: {{results}}
+        </h2>
+    </div>
+</body>
+</html>

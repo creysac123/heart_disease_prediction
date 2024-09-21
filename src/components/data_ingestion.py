@@ -78,7 +78,7 @@ if __name__ == "__main__":
         # Data Transformation (consider running this in batches or using GPU-accelerated methods)
         print("Starting data transformation...")
         data_transformation = DataTransformation()
-        train_arr, _ = data_transformation.initiate_data_transformation(train_data)
+        X,y, _ = data_transformation.initiate_data_transformation(train_data)
 
         print("Data transformation completed.")
         
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
         # Since we are using the entire dataset without a train-test split
         # we will only pass the complete `train_arr` (as a numpy array) to `initiate_model_trainer`
-        recall = modeltrainer.initiate_model_trainer(train_arr)
+        recall = modeltrainer.initiate_model_trainer(X,y)
 
 
         # Print out the final recall score
