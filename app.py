@@ -1,10 +1,13 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, flash, redirect, url_for
 import numpy as np
 import pandas as pd
 from src.pipeline.predict_pipeline import CustomData, PredictPipeline
 
 application = Flask(__name__)
 app = application
+
+# Set a secret key for session management
+app.secret_key = 'your_secret_key'
 
 ## Route for the home page
 @app.route('/')
@@ -16,40 +19,35 @@ def predict_datapoint():
     if request.method == 'GET':
         return render_template('home.html')
     else:
-        # Debugging: Print the form data received
-        print("Form Data:", request.form)
-
         # Collect form data
         data = CustomData(
-            bmi=float(request.form.get('bmi')),  # Ensure 'bmi' matches the expected parameter name
-            age_category=request.form.get('age_category'),  # Ensure 'age_category' matches
-            sleep_time=float(request.form.get('sleep_time')),  # Ensure 'sleep_time' matches
-            physical_health=float(request.form.get('physical_health')),  # Ensure 'physical_health' matches
-            mental_health=float(request.form.get('mental_health')),  # Ensure 'mental_health' matches
-            gen_health=request.form.get('gen_health'),  # Ensure 'gen_health' matches
-            diabetic=request.form.get('diabetic'),  # Ensure 'diabetic' matches
-            sex=request.form.get('sex'),  # Ensure 'sex' matches
-            smoking=request.form.get('smoking'),  # Ensure 'smoking' matches
-            stroke=request.form.get('stroke'),  # Ensure 'stroke' matches
-            physical_activity=request.form.get('physical_activity'),  # Ensure 'physical_activity' matches
-            diff_walking=request.form.get('diff_walking')  # Ensure 'diff_walking' matches
+            bmi=float(request.form.get('bmi')),
+            age_category=request.form.get('age_category'),
+            sleep_time=float(request.form.get('sleep_time')),
+            physical_health=float(request.form.get('physical_health')),
+            mental_health=float(request.form.get('mental_health')),
+            gen_health=request.form.get('gen_health'),
+            diabetic=request.form.get('diabetic'),
+            sex=request.form.get('sex'),
+            smoking=request.form.get('smoking'),
+            stroke=request.form.get('stroke'),
+            physical_activity=request.form.get('physical_activity'),
+            diff_walking=request.form.get('diff_walking')
         )
 
         # Convert form data to DataFrame
         pred_df = data.get_data_as_data_frame()
-        print(pred_df)
-        print("Before Prediction")
 
         # Create a PredictPipeline instance and make a prediction
         predict_pipeline = PredictPipeline()
-        print("Mid Prediction")
         results = predict_pipeline.predict(pred_df)
-        print("After Prediction")
 
-        # Return the prediction result
-        return render_template('home.html', results= {"Yes" if results[0] == 1 else "No"})
-
-
+        # Prepare the prediction result
+        prediction_result = 'Yes' if results[0] == 1 else 'No'
+        
+        # Flash the prediction result
+        flash(f'The predicted heart disease outcome is: {prediction_result}')
+        return redirect(url_for('predict_datapoint'))  # Redirect to the same route
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host="0.0.0.0",port=8080)

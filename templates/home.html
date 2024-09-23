@@ -150,9 +150,10 @@
             </div>
         </form>
 
-        <h2>
-           The predicted heart disease outcome is: {{results}}
-        </h2>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <h2>{{ messages[0] }}</h2>
+            {% endif %}
+        {% endwith %}
     </div>
 </body>
-</html>
